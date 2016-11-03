@@ -62,7 +62,6 @@ public class DBHelper extends SQLiteOpenHelper {
         newValues.put(TASK_STATUS_COLUMN, task.getStatus());
         newValues.put(TASK_PRIORITY_COLUMN, task.getPriority());
         newValues.put(TASK_TIME_STAMP_COLUMN, task.getTimeStamp());
-
         getWritableDatabase().insert(TASKS_TABLE, null, newValues);
     }
 

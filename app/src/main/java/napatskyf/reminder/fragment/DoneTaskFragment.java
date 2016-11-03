@@ -63,12 +63,43 @@ public class DoneTaskFragment extends TaskFragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+        addTaskFromDB((MainActivity) getActivity());
+    }
+
+    @Override
     public void addTaskFromDB(MainActivity mainActivity) {
-//        List<ModelTask> tasks = new ArrayList<>();
-//        tasks.addAll(activity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS ,
-//                new String[]{Integer.toString(ModelTask.STATUS_DONE)}, DBHelper.TASK_DATE_COLUMN));
-//        for (int i = 0; i < tasks.size(); i++) {
-//            addTask(tasks.get(i), false);
-//        }
+        List<ModelTask> tasks = new ArrayList<>();
+        tasks.addAll(mainActivity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS ,
+                new String[]{Integer.toString(ModelTask.STATUS_DONE)}, DBHelper.TASK_DATE_COLUMN));
+        for (int i = 0; i < tasks.size(); i++) {
+            addTask(tasks.get(i), false);
+        }
+    }
+
+    public void addTask(ModelTask newTask,boolean b) {
+        int position = -1;
+
+        for (int i=0;i<adapter.getItemCount();i++)
+        {
+            if(adapter.getItem(i).isTask())
+            {
+                ModelTask task = (ModelTask) adapter.getItem(i);
+                if(newTask.getDate() < task.getDate())
+                {
+                    position = i;
+                    break;
+                }
+            }
+        }
+
+        if(position != -1 )
+        {
+            adapter.addItem(position,newTask);
+        }else
+        {
+            adapter.addItem(newTask);
+        }
     }
 }

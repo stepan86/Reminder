@@ -13,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import napatskyf.reminder.MainActivity;
 import napatskyf.reminder.R;
 import napatskyf.reminder.Utils;
 import napatskyf.reminder.fragment.CurrentTaskFragment;
@@ -104,7 +106,10 @@ public class CurrentTaskAdapter extends TaskAdapter {
 
                     task.setStatus(ModelTask.STATUS_DONE);
 
-                 //   getTaskFragment().activity.dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_DONE);
+                  //  task.setTimeStamp(System.currentTimeMillis());
+
+
+                    ((MainActivity) getTaskFragment().getActivity()).dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_DONE);
 
                     itemView.setBackgroundColor(resources.getColor(R.color.gray_200));
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));

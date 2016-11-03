@@ -40,6 +40,8 @@ public class ModelTask  implements Item {
         this.mDate = mDate;
         this.mPriority = mPriority;
         this.mStatus = mStatus;
+        this.mTimeStamp = timeStamp;
+
     }
 
     public String getTitle() {

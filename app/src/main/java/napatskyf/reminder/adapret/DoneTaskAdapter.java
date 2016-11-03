@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import napatskyf.reminder.MainActivity;
 import napatskyf.reminder.R;
 import napatskyf.reminder.Utils;
 import napatskyf.reminder.database.DBHelper;
@@ -72,7 +73,7 @@ public class DoneTaskAdapter extends TaskAdapter {
                 public void onClick(View v) {
 
                     task.setStatus(ModelTask.STATUS_CURRENT);
-                    getTaskFragment().activity.dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_CURRENT);
+                    ((MainActivity) getTaskFragment().getActivity()).dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_CURRENT);
                     itemView.setBackgroundColor(resources.getColor(R.color.gray_50));
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
                     taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
@@ -142,6 +143,7 @@ public class DoneTaskAdapter extends TaskAdapter {
 
         }
     }
+
 
 
 

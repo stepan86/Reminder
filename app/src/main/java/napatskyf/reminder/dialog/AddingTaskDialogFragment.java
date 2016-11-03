@@ -85,6 +85,7 @@ public class AddingTaskDialogFragment extends DialogFragment  {
 
         textInputTime.setHint(getResources().getString(R.string.task_time));
         final ModelTask task = new ModelTask();
+        task.setTimeStamp(System.currentTimeMillis());
         task.setStatus(ModelTask.STATUS_CURRENT);
         mSpinerPriority = (Spinner) conteiner.findViewById(R.id.spinerPriority);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,ModelTask.PRIORITY_LEVEL);

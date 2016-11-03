@@ -147,12 +147,13 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskDone(ModelTask task) {
-       // doneTaskFragment.addTask(task,false);
+       // doneTaskFragment = new CurrentTaskFragment();
+        ((DoneTaskFragment) doneTaskFragment).addTask(task,false);
     }
 
     @Override
     public void onTaskRestoreListner(ModelTask task) {
-   //     currentTaskFragment.addTask(task,false);
+        ((CurrentTaskFragment)currentTaskFragment).addTask(task,false);
     }
 
 

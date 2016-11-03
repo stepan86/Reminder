@@ -39,5 +39,4 @@ public abstract class TaskFragment extends Fragment {
 
 
 
-
 }
