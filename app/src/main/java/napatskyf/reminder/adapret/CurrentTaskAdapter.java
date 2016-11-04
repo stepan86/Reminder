@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Handler;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import napatskyf.reminder.MainActivity;
@@ -36,6 +37,8 @@ public class CurrentTaskAdapter extends TaskAdapter {
 //
     private static final int TYPE_TASK = 0;
     private static final int TYPE_SEPARATOR = 1;
+    MainActivity activity  =  (MainActivity) getTaskFragment().getActivity();
+
 
     public CurrentTaskAdapter(CurrentTaskFragment taskFragment) {
         super(taskFragment);
@@ -100,6 +103,20 @@ public class CurrentTaskAdapter extends TaskAdapter {
             taskViewHolder.prioriry.setColorFilter(resources.getColor(task.getPriorityColor()));
             taskViewHolder.prioriry.setImageResource(R.drawable.ic_checkbox_blank_circle_white_48dp);
 
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    android.os.Handler handler = new android.os.Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((CurrentTaskFragment) getTaskFragment()).removeTaskDialog(taskViewHolder.getLayoutPosition());
+                        }
+                    },1000);
+                    return true;
+                }
+            });
+
             taskViewHolder.prioriry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -109,7 +126,7 @@ public class CurrentTaskAdapter extends TaskAdapter {
                   //  task.setTimeStamp(System.currentTimeMillis());
 
 
-                    ((MainActivity) getTaskFragment().getActivity()).dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_DONE);
+                    activity.dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_DONE);
 
                     itemView.setBackgroundColor(resources.getColor(R.color.gray_200));
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_disabled_material_light));

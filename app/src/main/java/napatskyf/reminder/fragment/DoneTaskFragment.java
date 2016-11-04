@@ -2,8 +2,11 @@ package napatskyf.reminder.fragment;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import napatskyf.reminder.MainActivity;
 import napatskyf.reminder.R;
 import napatskyf.reminder.adapret.DoneTaskAdapter;
 import napatskyf.reminder.database.DBHelper;
+import napatskyf.reminder.model.Item;
 import napatskyf.reminder.model.ModelTask;
 
 
@@ -101,5 +105,57 @@ public class DoneTaskFragment extends TaskFragment {
         {
             adapter.addItem(newTask);
         }
+    }
+
+    public void removeTaskDialog(final int location) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        dialog.setMessage(R.string.dialog_removing_messege);
+        Item item = adapter.getItem(location);
+
+        if (item.isTask()) {
+            ModelTask task = (ModelTask) item;
+            final long timeStamp = task.getTimeStamp();
+            final boolean[] isRemoved = {false};
+            dialog.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    adapter.removeItem(location);
+                    isRemoved[0] = true;
+                    Snackbar snackbar = Snackbar.make(getActivity().findViewById(R.id.coordinator), R.string.removed, Snackbar.LENGTH_LONG);
+                    snackbar.setAction(R.string.dilog_cancel, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            isRemoved[0] = false;
+                            addTask(((MainActivity) getActivity()).dbHelper.query().getTask(timeStamp),false);
+                        }
+                    });
+                    snackbar.getView().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                        @Override
+                        public void onViewAttachedToWindow(View v) {
+
+                        }
+
+                        @Override
+                        public void onViewDetachedFromWindow(View v) {
+                            if (isRemoved[0]) {
+                                ((MainActivity) getActivity()).dbHelper.removedTask(timeStamp);
+                            }
+                        }
+                    });
+                    snackbar.show();
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.setNegativeButton(R.string.dilog_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+
+            dialog.show();
+        }
+
     }
 }

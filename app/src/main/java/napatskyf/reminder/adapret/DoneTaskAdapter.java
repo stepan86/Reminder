@@ -20,6 +20,7 @@ import napatskyf.reminder.R;
 import napatskyf.reminder.Utils;
 import napatskyf.reminder.database.DBHelper;
 import napatskyf.reminder.fragment.CurrentTaskFragment;
+import napatskyf.reminder.fragment.DoneTaskFragment;
 import napatskyf.reminder.fragment.TaskFragment;
 import napatskyf.reminder.model.Item;
 import napatskyf.reminder.model.ModelTask;
@@ -67,6 +68,20 @@ public class DoneTaskAdapter extends TaskAdapter {
             taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_disabled_material_light));
             taskViewHolder.prioriry.setColorFilter(resources.getColor(task.getPriorityColor()));
             taskViewHolder.prioriry.setImageResource(R.drawable.ic_check_circle_white_48dp);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    android.os.Handler handler = new android.os.Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((DoneTaskFragment) getTaskFragment()).removeTaskDialog(taskViewHolder.getLayoutPosition());
+                        }
+                    },1000);
+                    return true;
+                }
+            });
 
             taskViewHolder.prioriry.setOnClickListener(new View.OnClickListener() {
                 @Override
