@@ -126,7 +126,7 @@ public class CurrentTaskAdapter extends TaskAdapter {
                     return true;
                 }
             });
-
+//
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
