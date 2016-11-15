@@ -24,6 +24,7 @@ public class ModelTask  implements Item {
     private int mPriority;
     private int mStatus;
     private long mTimeStamp;
+    public int dateStatus;
 
     @Override
     public boolean isTask() {

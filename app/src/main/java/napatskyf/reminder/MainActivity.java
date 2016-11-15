@@ -1,7 +1,5 @@
 package napatskyf.reminder;
 
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,31 +7,33 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.MenuPopupWindow;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import napatskyf.reminder.adapret.CurrentTaskAdapter;
 import napatskyf.reminder.adapret.TabAdapter;
 import napatskyf.reminder.database.DBHelper;
 import napatskyf.reminder.dialog.AddingTaskDialogFragment;
+import napatskyf.reminder.dialog.EditTaskDialogFragment;
 import napatskyf.reminder.fragment.CurrentTaskFragment;
 import napatskyf.reminder.fragment.DoneTaskFragment;
 import napatskyf.reminder.fragment.SplashFragment;
-import napatskyf.reminder.fragment.TaskFragment;
 import napatskyf.reminder.model.ModelTask;
 
 
-public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener , CurrentTaskFragment.OnTaskDoneListener,DoneTaskFragment.OnTaskRestoreListner {
+public class MainActivity extends AppCompatActivity implements AddingTaskDialogFragment.AddingTaskListener , CurrentTaskFragment.OnTaskDoneListener,DoneTaskFragment.OnTaskRestoreListner , EditTaskDialogFragment.onEditTaskListener {
     FragmentManager fragmentManager;
     PreferenceHelper preferenceHelper;
-    TaskFragment doneTaskFragment;
-    TaskFragment currentTaskFragment;
+    DoneTaskFragment doneTaskFragment;
+    CurrentTaskFragment currentTaskFragment;
     TabAdapter tabAdapter;
     Context context;
     public  DBHelper dbHelper;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +46,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
         dbHelper = new DBHelper(getApplicationContext());
         context = this;
         setUI();
-
-
-
     }
 
     public void runSplash() {
@@ -56,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
             SplashFragment splashFragment = new SplashFragment();
             fragmentManager.beginTransaction().replace(R.id.content_frame, splashFragment).addToBackStack(null).commit();
         }
-
     }
 
     @Override
@@ -111,16 +107,27 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-
-
         });
 
         currentTaskFragment = (CurrentTaskFragment) tabAdapter.getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
         doneTaskFragment = (DoneTaskFragment) tabAdapter.getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
         //DoneTaskFragment done = new DoneTaskFragment();
+        searchView = (SearchView) findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
 
-        ((DoneTaskFragment) doneTaskFragment).setClickListener(this);
-        ((CurrentTaskFragment) currentTaskFragment).setClickListener(this);
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                currentTaskFragment.findTasks(newText);
+                doneTaskFragment.findTasks(newText);
+                return false;
+            }
+        });
+        doneTaskFragment.setClickListener(this);
+        currentTaskFragment.setClickListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
 
     @Override
     public void onTaskAdded(ModelTask task) {
-        ((CurrentTaskFragment) currentTaskFragment).addTask(task,true);
+         currentTaskFragment.addTask(task,true);
         dbHelper.saveTask(task);
         //    Toast.makeText(this,"Task added",Toast.LENGTH_SHORT).show();
     }
@@ -148,14 +155,19 @@ public class MainActivity extends AppCompatActivity implements AddingTaskDialogF
     @Override
     public void onTaskDone(ModelTask task) {
        // doneTaskFragment = new CurrentTaskFragment();
-        ((DoneTaskFragment) doneTaskFragment).addTask(task,false);
+        doneTaskFragment.addTask(task,false);
     }
 
     @Override
     public void onTaskRestoreListner(ModelTask task) {
-        ((CurrentTaskFragment)currentTaskFragment).addTask(task,false);
+        currentTaskFragment.addTask(task,false);
     }
 
 
+    @Override
+    public void onTaskListner(ModelTask task) {
+        currentTaskFragment.udaterTask(task);
+        dbHelper.update().task(task);
+    }
 }
 

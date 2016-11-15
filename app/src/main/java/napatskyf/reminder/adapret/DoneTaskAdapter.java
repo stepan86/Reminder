@@ -3,7 +3,6 @@ package napatskyf.reminder.adapret;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,17 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import napatskyf.reminder.MainActivity;
 import napatskyf.reminder.R;
 import napatskyf.reminder.Utils;
-import napatskyf.reminder.database.DBHelper;
-import napatskyf.reminder.fragment.CurrentTaskFragment;
 import napatskyf.reminder.fragment.DoneTaskFragment;
-import napatskyf.reminder.fragment.TaskFragment;
 import napatskyf.reminder.model.Item;
 import napatskyf.reminder.model.ModelTask;
 
@@ -30,9 +23,9 @@ import napatskyf.reminder.model.ModelTask;
  */
 
 public class DoneTaskAdapter extends TaskAdapter {
-
-    public DoneTaskAdapter(TaskFragment taskFragment) {
-        super(taskFragment);
+DoneTaskFragment taskFragment;
+    public DoneTaskAdapter(DoneTaskFragment taskFragment) {
+        this.taskFragment = taskFragment;
     }
 
 
@@ -76,7 +69,7 @@ public class DoneTaskAdapter extends TaskAdapter {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            ((DoneTaskFragment) getTaskFragment()).removeTaskDialog(taskViewHolder.getLayoutPosition());
+                            taskFragment.removeTaskDialog(taskViewHolder.getLayoutPosition());
                         }
                     },1000);
                     return true;
@@ -88,7 +81,7 @@ public class DoneTaskAdapter extends TaskAdapter {
                 public void onClick(View v) {
 
                     task.setStatus(ModelTask.STATUS_CURRENT);
-                    ((MainActivity) getTaskFragment().getActivity()).dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_CURRENT);
+                    ((MainActivity) taskFragment.getActivity()).dbHelper.update().status(task.getTimeStamp(),ModelTask.STATUS_CURRENT);
                     itemView.setBackgroundColor(resources.getColor(R.color.gray_50));
                     taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
                     taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
@@ -122,7 +115,7 @@ public class DoneTaskAdapter extends TaskAdapter {
                                     @Override
                                     public void onAnimationEnd(Animator animation) {
                                         itemView.setVisibility(View.GONE);
-                                        getTaskFragment().moveTask(task);
+                                        taskFragment.moveTask(task);
                                         removeItem(taskViewHolder.getLayoutPosition());
 
                                     }

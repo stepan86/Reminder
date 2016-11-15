@@ -14,7 +14,7 @@ public  static String getDate(long date){
 
 }
     public  static String getTime(long date){
-       SimpleDateFormat dateFormat = new SimpleDateFormat("HH.mm");
+       SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
         return  dateFormat.format(date);
 
     }
@@ -22,7 +22,7 @@ public  static String getDate(long date){
     public static String getFullDate(long date)
     {
 
-        SimpleDateFormat fullDataFormat = new SimpleDateFormat("dd.MM.yy  HH.mm");
+        SimpleDateFormat fullDataFormat = new SimpleDateFormat("dd.MM.yy HH:mm");
 
         return fullDataFormat.format(date);
     }

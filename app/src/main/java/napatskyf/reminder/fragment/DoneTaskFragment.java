@@ -27,10 +27,10 @@ import napatskyf.reminder.model.ModelTask;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DoneTaskFragment extends TaskFragment {
-//    RecyclerView recyclerView;
-//    RecyclerView.LayoutManager layoutManager;
-
+public class DoneTaskFragment extends Fragment {
+    RecyclerView recycleView;
+    RecyclerView.LayoutManager layoutManager;
+    DoneTaskAdapter adapter;
     OnTaskRestoreListner onTaskRestoreListner;
 
     public  void setClickListener(Activity clicklistener ) {
@@ -51,7 +51,6 @@ public class DoneTaskFragment extends TaskFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView  = inflater.inflate(R.layout.fragment_done_task, container, false);
-
         recycleView = (RecyclerView) rootView.findViewById(R.id.rvDoneTask);
         layoutManager = new LinearLayoutManager(getActivity());
         recycleView.setLayoutManager(layoutManager);
@@ -60,7 +59,7 @@ public class DoneTaskFragment extends TaskFragment {
         return rootView;
     }
 
-    @Override
+
     public void moveTask(ModelTask task) {
         onTaskRestoreListner.onTaskRestoreListner(task);
     }
@@ -72,11 +71,23 @@ public class DoneTaskFragment extends TaskFragment {
         addTaskFromDB((MainActivity) getActivity());
     }
 
-    @Override
+
     public void addTaskFromDB(MainActivity mainActivity) {
         List<ModelTask> tasks = new ArrayList<>();
         tasks.addAll(mainActivity.dbHelper.query().getTasks(DBHelper.SELECTION_STATUS ,
                 new String[]{Integer.toString(ModelTask.STATUS_DONE)}, DBHelper.TASK_DATE_COLUMN));
+        for (int i = 0; i < tasks.size(); i++) {
+            addTask(tasks.get(i), false);
+        }
+    }
+
+
+    public void findTasks(String title) {
+        adapter.removeAllItems();
+        List<ModelTask> tasks = new ArrayList<>();
+        tasks.addAll(((MainActivity) getActivity()).dbHelper.query().getTasks(DBHelper.SELECTION_LIKE_TITLE +
+                " AND "+DBHelper.SELECTION_STATUS
+                ,new String[]{ "%"+title+"%",Integer.toString(ModelTask.STATUS_DONE)}, DBHelper.TASK_DATE_COLUMN));
         for (int i = 0; i < tasks.size(); i++) {
             addTask(tasks.get(i), false);
         }

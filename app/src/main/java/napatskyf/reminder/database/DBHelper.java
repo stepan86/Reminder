@@ -35,6 +35,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static String SELECT_TIME_STAMP = TASK_TIME_STAMP_COLUMN+"= ?";
 
+    public static final String SELECTION_LIKE_TITLE = TASK_TITLE_COLUMN + " LIKE ?";
+
     private DBQueryManager queryManager;
     private DBUpdateManager updateManager;
 
