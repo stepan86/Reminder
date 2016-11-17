@@ -198,7 +198,7 @@ public class CurrentTaskAdapter extends TaskAdapter {
 
                             }
                         }
-
+                        //
                         @Override
                         public void onAnimationCancel(Animator animation) {
 
@@ -250,5 +250,10 @@ public class CurrentTaskAdapter extends TaskAdapter {
 //    public   getTaskFragment() {
 //        return taskFragment;
 //    }
+
+    public void get()
+    {
+
+    }
 
 }
