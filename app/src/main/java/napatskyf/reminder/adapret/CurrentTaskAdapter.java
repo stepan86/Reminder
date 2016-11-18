@@ -251,9 +251,6 @@ public class CurrentTaskAdapter extends TaskAdapter {
 //        return taskFragment;
 //    }
 
-    public void get()
-    {
 
-    }
 
 }
